@@ -19,7 +19,7 @@ test('weather boundaries and seasonal shoulder months',()=>{
 });
 test('rain always selects an existing protected look in every temperature pool',()=>{
  for(const temp of [-5,7,8,14,15,19,20,30])for(const month of [1,4,7,10])for(const rain of [{precip:.1,dailyPrecip:0},{precip:0,dailyPrecip:1}]){
- const {look}=recommend({temp,wind:2,...rain},{month});assert.ok(looks.includes(look));assert.ok(look.rain);assert.ok(look.layer);assert.ok(!look.pieces.includes('P19'));assert.ok(look.pieces.some(id=>['P20','P23'].includes(id)));
+ const {look}=recommend({temp,wind:2,...rain},{month});assert.deepEqual(look,looks.find(l=>l.id===look.id));assert.ok(look.rain);assert.ok(look.layer);assert.ok(!look.pieces.includes('P19'));assert.ok(look.pieces.some(id=>['P20','P23'].includes(id)));
  }
 });
 test('wind prioritises layers and cool weather prioritises midlayers',()=>{

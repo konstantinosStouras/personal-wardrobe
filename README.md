@@ -25,7 +25,7 @@ Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather r
 
 ## Personalisation and provenance
 
-User-provided: height 191 cm, weight 120 kg, former water-polo player, broad developed chest. A late-30s fictional male stand-in represents these proportions. **No personal face photos or closet photos were provided**, so generated photos are neither a verified likeness nor a measured virtual fitting. Date of birth is intentionally not stored or displayed.
+User-provided: height 191 cm, weight 120 kg, former water-polo player, broad developed chest. Seven looks now use the supplied personal photos with the requested slimmer arms and face, dark hair and dark beard; the remaining images are being replaced. AI edits can vary in likeness and are not measured virtual fittings. No closet inventory photos were supplied. Date of birth is intentionally not stored or displayed.
 
 The default first name came from the connected GitHub display name and is editable. No city, garment sizes, ownership, budget or specific product match is assumed. All garments start **To confirm**, then can become **Owned** or **Buy**. The visual palette and relaxed smart-casual styling are inferred from the reference images. Individual piece cards reuse a photograph of the item within a complete look and label that fact.
 
@@ -78,3 +78,4 @@ The public Firebase API key is a browser project identifier, not an admin creden
 The GitHub Pages copy is the contents of `dist/` at `daywear/` in `konstantinosStouras/konstantinosStouras.github.io`, branch `master`. Preserve that repository’s Jekyll configuration and other pages. Do not add a root `.nojekyll` file. Subsequent updates should copy the complete final `dist/` content into `daywear/`, commit and push normally. The source repository remains `konstantinosStouras/personal-wardrobe`. No repository link is displayed in the product.
 
 Validation: automated tests cover wardrobe, weather, location and authentication policy. A disposable synthetic account verified real Firebase registration, sign-in, password enforcement and generic invalid-login responses and was removed afterwards. Google sign-in and sign-out were exercised in the browser. Facebook/Apple have not been enabled or tested.
+
