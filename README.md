@@ -14,7 +14,8 @@ Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather r
 
 ## Features
 
-- On each load, request fresh apparent temperature, rain, wind and daily precipitation from Open-Meteo for the selected city. The first visit asks for a city rather than inventing a home location or forecast.
+- On each load, request fresh apparent temperature, rain, wind and daily precipitation from Open-Meteo for the selected city. The default is the device’s current location, requested through browser permission on page load. If access is denied or unavailable, choose a city manually.
+- Choose a travel city anywhere in the world, keep up to eight recent destinations, and switch back to current location. Travel mode persists across reloads; current mode gets a fresh device fix on each visit. Destinations show today’s local weather, not future-trip forecasts.
 - Select one existing outfit, explain the choice, and offer an existing rain or colder-weather alternative.
 - Browse all seasons and look details, check off today’s garments, search/filter pieces, and confirm ownership.
 - Rank confirmed shopping gaps by reuse. Search links are generic, not verified products or stock claims.
@@ -50,13 +51,16 @@ Weather failures show an error and no invented reading or weather recommendation
 
 - `dist/data.js`: the full piece inventory and 30 looks.
 - `dist/weather.js`: weather client and deterministic selection logic.
+- `dist/location.js`: device location, city-name lookup, travel preferences and history.
 - `dist/app.js`, `dist/styles.css`: interface and browser-local persistence.
 - `dist/assets/`: generated catalog images, committed for self-contained hosting.
 - `IMAGE-PROMPTS.md`: prompts and generation provenance.
-- `tests/wardrobe.test.mjs`: inventory and weather invariants.
+- `tests/wardrobe.test.mjs` and `tests/location.test.mjs`: inventory, weather and location invariants.
 
 ## Privacy and services
 
-No backend account, payments, analytics or third-party fonts. Name and wardrobe state stay in the browser. Open-Meteo receives a city query during search and city coordinates when requesting weather. Shopping search links open Google only when clicked. The initial GitHub repository and Sites deployment are private.
+No backend account, payments, analytics or third-party fonts. Name and wardrobe state stay in the browser. Open-Meteo receives city searches and weather coordinates. With browser permission, current-location coordinates are rounded to two decimal places before being sent to BigDataCloud for a city name and Open-Meteo for weather. Device coordinates are not saved to localStorage or backups. Explicit travel cities are saved locally. There is no silent IP-location fallback when permission is denied. Shopping search links open Google only when clicked. The GitHub repository is public. Sites hosting retains its separate access settings.
 
 Weather attribution and API documentation: [Open-Meteo](https://open-meteo.com/), [forecast API](https://open-meteo.com/en/docs), [geocoding API](https://open-meteo.com/en/docs/geocoding-api). Forecast data are subject to Open-Meteo’s terms and attribution requirements.
+
+City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigdatacloud.com/free-api/free-reverse-geocode-to-city-api). Calls originate in the browser for the device’s current location only. If naming fails, weather continues with the label “your current location”.
