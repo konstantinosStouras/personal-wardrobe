@@ -1,16 +1,16 @@
-# Konstantinos’s Wardrobe
+# Daywear
 
-A small, dependency-free personal wardrobe app inspired by the supplied monochrome catalog reference. Exactly **30 looks** share **40 pieces**: seven for each season, one gym uniform and one lounge uniform.
+A small, buildless personal wardrobe app inspired by the supplied monochrome catalog reference. Exactly **30 looks** share **40 pieces**: seven for each season, one gym uniform and one lounge uniform.
 
 ## Run locally
 
-Requires Node.js 20 or newer. No packages, API keys or build step are needed.
+Requires Node.js 20 or newer. No package installation or build step is needed. Firebase Authentication loads its pinned official JavaScript SDK from Google’s CDN; the public project configuration is included.
 
 ```sh
 npm run dev
 ```
 
-Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather rules. Deploy the contents of `dist/` to any static host; hash routes support subdirectories and GitHub Pages. The `.openai/hosting.json` manifest also supports private Sites hosting.
+Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather rules. Deploy the contents of `dist/` to any static host; hash routes support subdirectories and GitHub Pages. The `.openai/hosting.json` manifest also supports Sites hosting.
 
 ## Features
 
@@ -59,8 +59,22 @@ Weather failures show an error and no invented reading or weather recommendation
 
 ## Privacy and services
 
-No backend account, payments, analytics or third-party fonts. Name and wardrobe state stay in the browser. Open-Meteo receives city searches and weather coordinates. With browser permission, current-location coordinates are rounded to two decimal places before being sent to BigDataCloud for a city name and Open-Meteo for weather. Device coordinates are not saved to localStorage or backups. Explicit travel cities are saved locally. There is no silent IP-location fallback when permission is denied. Shopping search links open Google only when clicked. The GitHub repository is public. Sites hosting retains its separate access settings.
+Firebase manages registered accounts, display names, email addresses and authentication sessions. Passwords are sent directly to Firebase over HTTPS and are never stored by application code. Session persistence is the default; users can explicitly choose to stay signed in. Wardrobe preferences remain in browser storage, isolated by Firebase user ID, with a separate guest profile. Cross-device wardrobe sync is not implemented. Signing out leaves the account’s local preferences available for its next sign-in. Deleting an account removes its Firebase identity and local preferences on that device, but not copies on other devices or exported backups. No payments, analytics or third-party fonts. Open-Meteo receives city searches and weather coordinates. With browser permission, current-location coordinates are rounded to two decimal places before being sent to BigDataCloud for a city name and Open-Meteo for weather. Device coordinates are not saved to localStorage or backups. Explicit travel cities are saved locally. There is no silent IP-location fallback when permission is denied. Shopping search links open Google only when clicked. The GitHub repository and hosted site are public. Original reference photos are not committed or published.
 
 Weather attribution and API documentation: [Open-Meteo](https://open-meteo.com/), [forecast API](https://open-meteo.com/en/docs), [geocoding API](https://open-meteo.com/en/docs/geocoding-api). Forecast data are subject to Open-Meteo’s terms and attribution requirements.
 
 City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigdatacloud.com/free-api/free-reverse-geocode-to-city-api). Calls originate in the browser for the device’s current location only. If naming fails, weather continues with the label “your current location”.
+
+## Registration & deployment
+
+Primary website: https://www.stouras.com/daywear/
+
+Firebase project: `stouras-personal-wardrobe`. Email/password and Google are enabled. The Firebase console is at https://console.firebase.google.com/project/stouras-personal-wardrobe/overview. Registration includes a 10–128 character server-enforced password policy, password confirmation, verification email/resend, password reset, sign-out and user-initiated account deletion. Email enumeration protection is enabled. No account is silently linked to another provider.
+
+Facebook and Apple are deferred at the owner’s request. `enabledProviders` in `dist/firebase-config.js` exposes only configured providers. Facebook needs a Meta developer app, app ID/secret, approved login configuration and its Firebase callback URL. Apple needs an Apple Developer membership, Service ID, Team ID, signing key and callback configuration. Store provider secrets only in Firebase/provider consoles, never in this public repository. Instagram is not a built-in Firebase consumer authentication provider; Meta’s current Instagram Login targets professional accounts and is not a general substitute for Facebook/Google sign-in.
+
+The public Firebase API key is a browser project identifier, not an admin credential. Authorized domains include www.stouras.com, stouras.com and the existing Sites URL. Authentication does not turn the static catalogue into private content. All 30 generated looks are public.
+
+The GitHub Pages copy is the contents of `dist/` at `daywear/` in `konstantinosStouras/konstantinosStouras.github.io`, branch `master`. Preserve that repository’s Jekyll configuration and other pages. Do not add a root `.nojekyll` file. Subsequent updates should copy the complete final `dist/` content into `daywear/`, commit and push normally. The source repository remains `konstantinosStouras/personal-wardrobe`. No repository link is displayed in the product.
+
+Validation: 19 automated tests cover wardrobe, weather, location and authentication policy. A disposable synthetic account verified real Firebase registration, sign-in, password enforcement and generic invalid-login responses and was removed afterwards. Google sign-in and sign-out were exercised in the browser. Facebook/Apple have not been enabled or tested.
