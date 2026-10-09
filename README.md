@@ -10,7 +10,7 @@ Requires Node.js 20 or newer. No package installation or build step is needed. F
 npm run dev
 ```
 
-Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather rules. Deploy the contents of `dist/` to any static host; hash routes support subdirectories and GitHub Pages. The `.openai/hosting.json` manifest also supports Sites hosting.
+Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather rules. Deploy the contents of `dist/` to any static host; hash routes support subdirectories and GitHub Pages. The Sites mirror is deployed separately through a private server checkout; do not deploy this static archive over that server.
 
 ## Features
 
@@ -25,9 +25,9 @@ Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather r
 
 ## Personalisation and provenance
 
-User-provided: height 191 cm, weight 120 kg, former water-polo player, broad developed chest. Seven looks now use the supplied personal photos with the requested slimmer arms and face, dark hair and dark beard; the remaining images are being replaced. AI edits can vary in likeness and are not measured virtual fittings. No closet inventory photos were supplied. Date of birth is intentionally not stored or displayed.
+The public repository provides a complete 30-look guest image set. A separate private server holds the 30 personal looks. Signed-out visitors and accounts without a personal model see Daywear's slim fictional male catalog model. The owner's existing Firebase user ID selects his photo-based model throughout Today, season covers, look cards, Pieces, Shopping and Rotation. Signing out restores the default collection. The server verifies the Firebase ID token with Firebase on every private catalog/image request, then checks the authorized account. Unauthorized direct image requests fail. Personal pixels are fetched with an Authorization header, kept as in-memory blob URLs, and revoked on sign-out; they are excluded from this repository and its static deployment.
 
-The default first name came from the connected GitHub display name and is editable. No city, garment sizes, ownership, budget or specific product match is assumed. All garments start **To confirm**, then can become **Owned** or **Buy**. The visual palette and relaxed smart-casual styling are inferred from the reference images. Individual piece cards reuse a photograph of the item within a complete look and label that fact.
+The personal model follows the supplied photos, self-reported 191 cm height and 120 kg weight, accepted natural body proportions and slimmer arms, and the latest requested slimmer face, smoother skin, dark hair and black beard. AI likeness can vary and is not a measured fitting. Original photos and date of birth are not stored in the app. Guests start with a neutral editable profile; no city, garment sizes, ownership, budget or specific product match is assumed. All garments start **To confirm**, then can become **Owned** or **Buy**. The visual palette and relaxed smart-casual styling follow the reference images. Individual piece cards reuse a photograph of the item within a complete look and label that fact.
 
 Fit guidance: fit shoulders and chest first, check upper-arm and thigh room, confirm torso/sleeve/inseam length, and tailor the waist only after the upper body fits. Statistics alone cannot establish a clothing size.
 
@@ -53,7 +53,7 @@ Weather failures show an error and no invented reading or weather recommendation
 - `dist/weather.js`: weather client and deterministic selection logic.
 - `dist/location.js`: device location, city-name lookup, travel preferences and history.
 - `dist/app.js`, `dist/styles.css`: interface and browser-local persistence.
-- `dist/assets/`: generated catalog images, committed for self-contained hosting.
+- `dist/assets/`: fictional guest catalog images only, committed for static hosting.
 - `IMAGE-PROMPTS.md`: prompts and generation provenance.
 - `tests/wardrobe.test.mjs` and `tests/location.test.mjs`: inventory, weather and location invariants.
 
@@ -73,7 +73,7 @@ Firebase project: `stouras-personal-wardrobe`. Email/password and Google are ena
 
 Facebook and Apple are deferred at the owner’s request. `enabledProviders` in `dist/firebase-config.js` exposes only configured providers. Facebook needs a Meta developer app, app ID/secret, approved login configuration and its Firebase callback URL. Apple needs an Apple Developer membership, Service ID, Team ID, signing key and callback configuration. Store provider secrets only in Firebase/provider consoles, never in this public repository. Instagram is not a built-in Firebase consumer authentication provider; Meta’s current Instagram Login targets professional accounts and is not a general substitute for Facebook/Google sign-in.
 
-The public Firebase API key is a browser project identifier, not an admin credential. Authorized domains include www.stouras.com, stouras.com and the existing Sites URL. Authentication does not turn the static catalogue into private content. All 30 generated looks are public.
+The public Firebase API key is a browser project identifier, not an admin credential. Authorized domains include www.stouras.com, stouras.com and the existing Sites URL. Only the 30 fictional guest looks are public static images. Personal images use the authenticated server at the Sites domain. The UI account check is not the security boundary. The server has no public route for its source or image bundle.
 
 The GitHub Pages copy is the contents of `dist/` at `daywear/` in `konstantinosStouras/konstantinosStouras.github.io`, branch `master`. Preserve that repository’s Jekyll configuration and other pages. Do not add a root `.nojekyll` file. Subsequent updates should copy the complete final `dist/` content into `daywear/`, commit and push normally. The source repository remains `konstantinosStouras/personal-wardrobe`. No repository link is displayed in the product.
 
@@ -83,3 +83,7 @@ Validation: automated tests cover wardrobe, weather, location and authentication
 ## Sizes and optional model measurements
 
 The profile offers size dropdowns, explicit trouser sizing systems and custom-size options. Existing free-text sizes are retained without conversion. Optional height, weight, chest, waist, hips, shoulder width, relaxed upper-arm circumference, inseam, thigh, neck and sleeve measurements use labelled cm/kg units. Appearance/fit notes and a downloadable model brief can guide future photo-based generation; saving does not regenerate catalog images. No circumference or facial likeness is inferred from height/weight. All fields remain in the account-isolated browser profile and its user-exported backup; no measurement data is sent to Firebase or an image service. Save feedback is visible inside the dialog, and failed storage writes preserve the form for retry without reporting success.
+
+## Protected image delivery
+
+`dist/private-models.js` obtains the signed-in Firebase ID token in memory, sends it over HTTPS in an Authorization header, and turns the authenticated image payload into temporary blob URLs. It clears all URLs and cancels pending loads on account changes. No personal pixels, tokens, or image URLs are written to localStorage. A failed private fetch shows retry controls, never someone else’s model. Both the catalog endpoint and individual image endpoints authenticate independently. Signing out cannot erase screenshots or copies previously saved by an authorized viewer. Older public deployment/history copies predate this private delivery change.

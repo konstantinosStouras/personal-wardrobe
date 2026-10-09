@@ -4,3 +4,8 @@ node_modules/
 *.tar.gz
 *.log
 .sites/
+
+# Personal imagery belongs to the authenticated server, never static hosting.
+dist/assets/personal/
+private-images/
+worker/
