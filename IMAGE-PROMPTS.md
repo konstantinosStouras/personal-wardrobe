@@ -4,7 +4,7 @@ Generated using the built-in image_gen tool, one generation per look. All 30 req
 
 ## Identity and evidence
 
-The person is a consistent fictional stand-in, not a verified likeness of Konstantinos. No personal face or full-body photograph was supplied. The reference attachments show another person's website and were used only for visual direction. The user supplied 191 cm height, 120 kg weight, birth date 9 September 1987 (age 39 at generation), and a developed chest from water polo. The generated broad shoulders, chest, upper arms and substantial waist/thighs interpret these facts; they are not measured body dimensions. Hair, face and skin appearance are invented. Clothing is a proposed capsule rather than verified ownership or a measured fitting. Do not represent the images as proof of exact fit.
+The person is a consistent fictional stand-in, not a verified likeness of Konstantinos. No personal face or full-body photograph was supplied. The reference attachments show another person's website and were used only for visual direction. The user supplied 191 cm height, 120 kg weight, age 39 at generation, and a developed chest from water polo. The generated broad shoulders, chest, upper arms and substantial waist/thighs interpret these facts; they are not measured body dimensions. Hair, face and skin appearance are invented. Clothing is a proposed capsule rather than verified ownership or a measured fitting. Do not represent the images as proof of exact fit.
 
 ## Quality review
 
@@ -193,3 +193,4 @@ Use case: identity-preserve. Create one new 2:3 portrait full-body premium fashi
 Output: `dist/assets/lounge-1.webp`
 
 Use case: identity-preserve. Create one new 2:3 portrait full-body premium fashion catalog photograph. Reference image is the IDENTITY AND BODY reference; keep exactly the same fictional face, short dark brown hair, stubble, very broad shoulders, developed chest, thick upper arms, substantial natural waist and thick thighs. Same 191cm 120kg age-39 large sturdy former water-polo athletic body. Do NOT slim, beautify, narrow, or elongate. Keep same cool light-grey seamless studio backdrop, even lighting and relaxed straight-on standing pose. Full head and both shoes visible with clear margin. Replace ALL reference clothing with this exact outfit: Oatmeal lounge T-shirt, Charcoal lounge joggers, Charcoal house slippers. Garments must fit his actual broad torso comfortably, straight fit trousers not skinny. Outer jacket open to show shirt or knit; belt visible if specified. Natural realistic textiles. One man, no props, logos, lettering or watermark. Asset: lounge-1 — Slow mornings. No belt unless a belt is explicitly listed. No additional accessories.
+
