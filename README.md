@@ -79,3 +79,7 @@ The GitHub Pages copy is the contents of `dist/` at `daywear/` in `konstantinosS
 
 Validation: automated tests cover wardrobe, weather, location and authentication policy. A disposable synthetic account verified real Firebase registration, sign-in, password enforcement and generic invalid-login responses and was removed afterwards. Google sign-in and sign-out were exercised in the browser. Facebook/Apple have not been enabled or tested.
 
+
+## Sizes and optional model measurements
+
+The profile offers size dropdowns, explicit trouser sizing systems and custom-size options. Existing free-text sizes are retained without conversion. Optional height, weight, chest, waist, hips, shoulder width, relaxed upper-arm circumference, inseam, thigh, neck and sleeve measurements use labelled cm/kg units. Appearance/fit notes and a downloadable model brief can guide future photo-based generation; saving does not regenerate catalog images. No circumference or facial likeness is inferred from height/weight. All fields remain in the account-isolated browser profile and its user-exported backup; no measurement data is sent to Firebase or an image service. Save feedback is visible inside the dialog, and failed storage writes preserve the form for retry without reporting success.
