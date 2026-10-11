@@ -102,3 +102,9 @@ The public brand is WearWell, with the tagline “Your style. Every occasion.”
 A native public dropdown offers English, Greek, Spanish, French, Portuguese, Arabic, Mandarin (Simplified Chinese) and Cantonese (Traditional characters). Static dictionaries ship with the site; no visitor text or photos are sent to a translation service. Arabic uses right-to-left layout. Editable names, notes and size values are preserved. New visitors default to Automatic: country/subdivision codes from the existing location lookup select a supported local language, with English for unsupported countries or failed detection. Manual choices persist and take priority. A saved travel-weather city is not used as the visitor’s actual location. In multilingual locations, supported browser preferences can resolve country-level ambiguity; the dropdown remains the way to choose a preferred language.
 
 The WearWell wordmark, W favicon, home-screen icons, web manifest and 1200×630 share image are public brand assets. Open Graph, Twitter card and WebSite structured data are present in the initial HTML so crawlers do not need JavaScript. Platform-specific preview rendering and caches remain controlled by each social app.
+
+## Automatic weather refresh
+
+Weather is requested from Open-Meteo every 60 seconds while visible and online. Returning to a suspended tab or reconnecting checks immediately when overdue. Manual refreshes and city changes restart the timer. Requests time out after 15 seconds and bypass the browser cache. Failed requests clear readings and recommendations and retry on the next minute. Background updates preserve forms and non-weather pages.
+
+Open-Meteo combines suitable models from national weather services. Current conditions use 15-minute model data, so a request every minute does not mean new observations every minute. The weather card shows the provider’s data time.
