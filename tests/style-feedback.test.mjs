@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {looks,pieces} from '../dist/data.js';
 import {recommend} from '../dist/weather.js';
-import {cleanRatings,preferenceScore} from '../dist/preferences.js';
+import {cleanRatings,cleanPieceFeedback,dislikeReasons,preferenceScore} from '../dist/preferences.js';
+import {lookFeedbackControls} from '../dist/style-feedback.js';
+import feedbackGreek from '../dist/style-feedback-el.js';
 import {checkPurchase} from '../dist/purchase-check.js';
 import {translateText} from '../dist/i18n.js';
 
@@ -17,17 +19,49 @@ test('explicit preferences change suitable recommendations and votes can be remo
   assert.deepEqual(cleanRatings({'spring-1':1,'summer-1':-1,'winter-1':'1',extra:1}),{'spring-1':1,'summer-1':-1});
   assert.deepEqual(cleanRatings(null),{});
 });
-test('shared pieces influence unrated looks without overpowering explicit votes',()=>{
-  const ratings={'summer-2':1};
-  assert.ok(preferenceScore(looks.find(l=>l.id==='spring-2'),ratings)>preferenceScore(looks.find(l=>l.id==='winter-1'),ratings));
-  assert.ok(preferenceScore(looks.find(l=>l.id==='summer-2'),ratings)>1);
+test('whole-look votes judge only the combination; explicit piece feedback informs other looks',()=>{
+  const ratings={'summer-2':-1},get=id=>looks.find(l=>l.id===id);
+  assert.equal(preferenceScore(get('spring-2'),ratings),0);
+  assert.equal(preferenceScore(get('spring-2'),{'summer-2':1}),0);
+  const feedback={'summer-2':{P01:{rating:1,reasons:[]}}};
+  assert.ok(preferenceScore(get('spring-2'),ratings,feedback)>preferenceScore(get('winter-1'),ratings,feedback));
+  assert.ok(preferenceScore(get('summer-2'),ratings,feedback)<0);
+  feedback['summer-2'].P01={rating:-1,reasons:['combination','formal']};
+  assert.equal(preferenceScore(get('spring-2'),ratings,feedback),0);
+  feedback['summer-2'].P01.reasons.push('colour');
+  assert.ok(preferenceScore(get('spring-2'),ratings,feedback)<0);
+});
+test('piece feedback validates look membership, votes and ten optional unique reasons',()=>{
+  assert.equal(dislikeReasons.length,10);assert.equal(new Set(dislikeReasons.map(([id])=>id)).size,10);
+  const raw={'summer-2':{P01:{rating:-1,reasons:['colour','colour','bad','combination']},P18:{rating:1,reasons:['cut']},P19:{rating:'-1'},P40:{rating:-1,reasons:[]}},bad:{P01:{rating:-1}}};
+  const expected={'summer-2':{P01:{rating:-1,reasons:['colour','combination']},P18:{rating:1,reasons:[]}}};
+  assert.deepEqual(cleanPieceFeedback(raw,{'summer-2':-1}),expected);
+  assert.deepEqual(cleanPieceFeedback(JSON.parse(JSON.stringify(expected)),{'summer-2':-1}),expected);
+  assert.deepEqual(cleanPieceFeedback(raw,{'summer-2':1}),{});
+  assert.deepEqual(cleanPieceFeedback(null,{'summer-2':-1}),{});
+  assert.deepEqual(cleanPieceFeedback(raw,{}),{});
+});
+test('follow-up renders every piece and gives only rejected items reason dropdowns',()=>{
+  for(const look of looks){
+    const pieceFeedback={[look.id]:{[look.pieces[0]]:{rating:-1,reasons:['colour','cut']}}};
+    const html=lookFeedbackControls(look,{uid:'test',ratings:{[look.id]:-1},pieceFeedback});
+    assert.equal((html.match(/<fieldset/g)||[]).length,look.pieces.length);
+    assert.equal((html.match(/type="checkbox"/g)||[]).length,10);
+    assert.equal((html.match(/ checked/g)||[]).length,2);
+    assert.doesNotMatch(lookFeedbackControls(look,{uid:'test',ratings:{[look.id]:1},pieceFeedback}),/data-piece-rate/);
+    assert.doesNotMatch(lookFeedbackControls(look,{uid:null,ratings:{[look.id]:-1},pieceFeedback}),/data-piece-rate/);
+  }
+  for(const [en,el] of Object.entries(feedbackGreek)){
+    assert.equal(translateText(en,'el'),el);assert.equal(translateText(en,'en'),en);
+  }
 });
 test('hostile votes cannot override rain, wind, warmth, hemisphere or fixed uniforms',()=>{
   for(const temp of [-5,8,12,18,25])for(const wet of [false,true])for(const wind of [0,30]) {
     const weather={temp,precip:wet?2:0,dailyPrecip:0,wind};
     const baseline=recommend(weather,{month:10,latitude:-33}).look;
     const ratings=Object.fromEntries(looks.map(l=>[l.id,l.id===baseline.id?-1:1]));
-    const chosen=recommend(weather,{month:10,latitude:-33,ratings}).look;
+    const pieceFeedback=Object.fromEntries(looks.map(l=>[l.id,Object.fromEntries(l.pieces.map(id=>[id,{rating:-1,reasons:['colour']}]))]));
+    const chosen=recommend(weather,{month:10,latitude:-33,ratings,pieceFeedback}).look;
     assert.equal(chosen.season,baseline.season);
     if(wet)assert.ok(chosen.rain);
     if(wind>=25)assert.ok(chosen.layer);
