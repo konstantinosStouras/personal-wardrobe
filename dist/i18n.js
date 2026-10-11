@@ -1,8 +1,8 @@
-import feedbackGreek from './style-feedback-el.js?v=20261011-piece-feedback-v2';
-import {greek} from './translations-el.js?v=20261011-piece-feedback-v2';
+import feedbackGreek from './style-feedback-el.js?v=20261011-de-ru-v1';
+import {greek} from './translations-el.js?v=20261011-de-ru-v1';
 import greekExtras from './translations-extra-el.js';
-import {translateOther} from './translation-engine.js?v=20261011-piece-feedback-v2';
-import {languages,languageForLocation,readLanguagePreference} from './language-policy.js';
+import {translateOther} from './translation-engine.js?v=20261011-de-ru-v1';
+import {languages,languageForLocation,readLanguagePreference} from './language-policy.js?v=20261011-de-ru-v1';
 Object.assign(greek,greekExtras);
 const preferenceKey='daywear.language';
 let preference='auto';try{preference=readLanguagePreference(globalThis.localStorage);}catch{}
