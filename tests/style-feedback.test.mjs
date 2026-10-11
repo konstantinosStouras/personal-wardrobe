@@ -5,6 +5,7 @@ import {recommend} from '../dist/weather.js';
 import {cleanRatings,cleanPieceFeedback,dislikeReasons,preferenceScore} from '../dist/preferences.js';
 import {lookFeedbackControls} from '../dist/style-feedback.js';
 import feedbackGreek from '../dist/style-feedback-el.js';
+import feedbackLanguages from '../dist/style-feedback-languages.js';
 import {checkPurchase} from '../dist/purchase-check.js';
 import {translateText} from '../dist/i18n.js';
 
@@ -54,6 +55,7 @@ test('follow-up renders every piece and gives only rejected items reason dropdow
   for(const [en,el] of Object.entries(feedbackGreek)){
     assert.equal(translateText(en,'el'),el);assert.equal(translateText(en,'en'),en);
   }
+  for(const [lang,copy] of Object.entries(feedbackLanguages))for(const [en,value] of Object.entries(copy))assert.equal(translateText(en,lang),value);
 });
 test('hostile votes cannot override rain, wind, warmth, hemisphere or fixed uniforms',()=>{
   for(const temp of [-5,8,12,18,25])for(const wet of [false,true])for(const wind of [0,30]) {

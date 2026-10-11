@@ -1,4 +1,4 @@
-# Daywear
+# WearWell
 
 A small, buildless personal wardrobe app inspired by the supplied monochrome catalog reference. Exactly **30 looks** share **40 pieces**: seven for each season, one gym uniform and one lounge uniform.
 
@@ -74,7 +74,7 @@ City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigda
 
 Primary website: https://www.stouras.com/daywear/
 
-DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `DayWear website checks` only for DayWear files and its own checker/workflow. The general site checks exclude DayWear-only updates. SEMFE legacy redirect validation is a separate, path-scoped workflow with no dependency relationship to DayWear. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
+DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `DayWear website checks` only for DayWear files and its own checker/workflow. The general site checks exclude DayWear-only updates. WearWell has no dependency on SEMFE code or checks. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
 
 Firebase project: `stouras-personal-wardrobe`. Email/password and Google are enabled. The Firebase console is at https://console.firebase.google.com/project/stouras-personal-wardrobe/overview. Registration includes a 10–128 character server-enforced password policy, password confirmation, verification email/resend, password reset, sign-out and user-initiated account deletion. Email enumeration protection is enabled. No account is silently linked to another provider.
 
@@ -94,3 +94,17 @@ The profile offers size dropdowns, explicit trouser sizing systems and custom-si
 ## Protected image delivery
 
 `dist/private-models.js` obtains the signed-in Firebase ID token in memory, sends it over HTTPS in an Authorization header, and turns the authenticated image payload into temporary blob URLs. It clears all URLs and cancels pending loads on account changes. No personal pixels, tokens, or image URLs are written to localStorage. A failed private fetch shows retry controls, never someone else’s model. Both the catalog endpoint and individual image endpoints authenticate independently. Signing out cannot erase screenshots or copies previously saved by an authorized viewer. Older public deployment/history copies predate this private delivery change.
+
+## WearWell identity and languages
+
+The public brand is WearWell, with the tagline “Your style. Every occasion.” The existing `/daywear/` address, Firebase project, account data collections and browser storage namespaces remain stable. The catalog still has 30 complete looks and 40 pieces, but marketing describes the benefit rather than repeating inventory counts.
+
+A native public dropdown offers English, Greek, Spanish, French, Portuguese, Arabic, Mandarin (Simplified Chinese) and Cantonese (Traditional characters). Static dictionaries ship with the site; no visitor text or photos are sent to a translation service. Arabic uses right-to-left layout. Editable names, notes and size values are preserved. New visitors default to Automatic: country/subdivision codes from the existing location lookup select a supported local language, with English for unsupported countries or failed detection. Manual choices persist and take priority. A saved travel-weather city is not used as the visitor’s actual location. In multilingual locations, supported browser preferences can resolve country-level ambiguity; the dropdown remains the way to choose a preferred language.
+
+The WearWell wordmark, W favicon, home-screen icons, web manifest and 1200×630 share image are public brand assets. Open Graph, Twitter card and WebSite structured data are present in the initial HTML so crawlers do not need JavaScript. Platform-specific preview rendering and caches remain controlled by each social app.
+
+## Automatic weather refresh
+
+Weather is requested from Open-Meteo every 60 seconds while visible and online. Returning to a suspended tab or reconnecting checks immediately when overdue. Manual refreshes and city changes restart the timer. Requests time out after 15 seconds and bypass the browser cache. Failed requests clear readings and recommendations and retry on the next minute. Background updates preserve forms and non-weather pages.
+
+Open-Meteo combines suitable models from national weather services. Current conditions use 15-minute model data, so a request every minute does not mean new observations every minute. The weather card shows the provider’s data time.
