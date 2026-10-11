@@ -10,5 +10,5 @@ test('missing or unsafe photos use initials; guests show registration',()=>{
  for(const photoURL of [undefined,'javascript:alert(1)','data:image/svg+xml,<svg/>','https://user:password@example.com/pic']){
   assert.equal(accountIdentity({displayName:'Alex Smith',photoURL}).photo,'');assert.doesNotMatch(accountButtonMarkup({displayName:'Alex Smith',photoURL}),/<img/);
  }
- assert.match(accountButtonMarkup({displayName:'Alex Smith'}),/AS/);assert.equal(accountButtonMarkup(null),'Sign in / Register');
+ assert.match(accountButtonMarkup({displayName:'Alex Smith'}),/AS/);assert.equal(accountButtonMarkup(null),'Sign in');
 });

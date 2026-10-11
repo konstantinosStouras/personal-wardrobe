@@ -1,7 +1,7 @@
-import {getLanguage} from './i18n.js?v=20261011-style-feedback';
-import {accountIdentity,accountButtonMarkup} from './account-ui.js?v=20261011-style-feedback';
-import {firebaseConfig,enabledProviders} from './firebase-config.js?v=20261011-style-feedback';
-import {passwordProblem,authMessage} from './auth-policy.js?v=20261011-style-feedback';
+import {getLanguage} from './i18n.js?v=20261011-simple-navigation';
+import {accountIdentity,accountButtonMarkup} from './account-ui.js?v=20261011-simple-navigation';
+import {firebaseConfig,enabledProviders} from './firebase-config.js?v=20261011-simple-navigation';
+import {passwordProblem,authMessage} from './auth-policy.js?v=20261011-simple-navigation';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let sdk,auth,user=null,ready=false,initializationError=false,busy=false,view='signin',notice='';
@@ -73,6 +73,7 @@ async function initialize(){
  }catch{initializationError=true;render();}
 }
 trigger.addEventListener('click',()=>{view='signin';notice='';modal.showModal();render();});
+document.addEventListener('wardrobe:open-auth',event=>{view=event.detail?.view==='register'?'register':'signin';notice='';modal.showModal();render();});
 modal.addEventListener('click',e=>{
  const el=e.target.closest('button');if(!el)return;
  const action=el.dataset.account;

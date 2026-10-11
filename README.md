@@ -14,6 +14,9 @@ Open `http://127.0.0.1:4173`. Run `npm test` to verify the capsule and weather r
 
 ## Features
 
+- Signed-out visitors start on an informative public homepage with fictional lifestyle imagery, feature explanations, registration and an openly browsable sample wardrobe. It explicitly identifies the current catalog as menswear; the inclusive landing photography does not imply that additional collections or personal models already exist. Signed-in users start on Today.
+- Four primary destinations: Discover (Today when signed in), Wardrobe, Calendar and Shopping. Wardrobe contains the season selector, gym/lounge looks, Pieces and the unused-clothes review. Shopping contains Before you buy. Language controls remain public, beside the account button.
+- The header shows current local temperature, wind and humidity with a WMO-based day/night weather illustration. The detailed Today card includes feels-like temperature, daily high/low, rainfall, source and update time. Missing readings stay unavailable; recommendations continue to use apparent temperature.
 - Like or dislike looks on Today, collection cards and look details. Signed-in accounts keep votes in their own browser storage, with undo and backup import/export. Recommendations first satisfy the existing weather ranking, then use explicit votes and modest shared-garment/colour signals to rank equally suitable looks. Votes cannot override rain, wind, temperature, hemisphere or fixed gym/lounge uniforms.
 - **Before you buy** (`#consider`): signed-in users can open a JPEG, PNG or WebP photo (up to 8 MB), select its closest capsule counterpart and colour, and compare existing looks with confirmed Owned companions. Similar owned pieces are flagged; missing pieces and uncertain palettes are disclosed. This is a manual, rule-based comparison, not automatic image recognition or virtual try-on. Photos exist only as temporary in-memory blob URLs, never enter a server, browser storage or backups, and are revoked on navigation or account changes. The original 30 looks and 40 pieces remain unchanged.
 - On each load, request fresh apparent temperature, rain, wind and daily precipitation from Open-Meteo for the selected city. The default is the device’s current location, requested through browser permission on page load. If device access is denied, unsupported or times out, BigDataCloud resolves an approximate city from the calling browser’s IP. The page labels this explicitly and offers city correction. If both methods fail, city search remains available.
@@ -70,6 +73,8 @@ City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigda
 ## Registration & deployment
 
 Primary website: https://www.stouras.com/daywear/
+
+DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `DayWear website checks` only for DayWear files and its own checker/workflow. The general site checks exclude DayWear-only updates. SEMFE legacy redirect validation is a separate, path-scoped workflow with no dependency relationship to DayWear. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
 
 Firebase project: `stouras-personal-wardrobe`. Email/password and Google are enabled. The Firebase console is at https://console.firebase.google.com/project/stouras-personal-wardrobe/overview. Registration includes a 10–128 character server-enforced password policy, password confirmation, verification email/resend, password reset, sign-out and user-initiated account deletion. Email enumeration protection is enabled. No account is silently linked to another provider.
 
