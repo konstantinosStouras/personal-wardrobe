@@ -74,7 +74,7 @@ City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigda
 
 Primary website: https://www.stouras.com/wearwell/
 
-DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `DayWear website checks` only for DayWear files and its own checker/workflow. The general site checks exclude DayWear-only updates. WearWell has no dependency on SEMFE code or checks. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
+DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `WearWell website checks` for `wearwell/`, the legacy `daywear/` directory and its own checker/workflow. The general site checks exclude DayWear-only updates. WearWell has no dependency on SEMFE code or checks. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
 
 Firebase project: `stouras-personal-wardrobe`. Email/password and Google are enabled. The Firebase console is at https://console.firebase.google.com/project/stouras-personal-wardrobe/overview. Registration includes a 10–128 character server-enforced password policy, password confirmation, verification email/resend, password reset, sign-out and user-initiated account deletion. Email enumeration protection is enabled. No account is silently linked to another provider.
 
