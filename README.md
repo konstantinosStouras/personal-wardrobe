@@ -72,7 +72,7 @@ City-name lookup: [BigDataCloud client-side reverse geocoding](https://www.bigda
 
 ## Registration & deployment
 
-Primary website: https://www.stouras.com/daywear/
+Primary website: https://www.stouras.com/wearwell/
 
 DayWear has independent validation: this source repository runs `DayWear tests`, and the publishing repository runs `DayWear website checks` only for DayWear files and its own checker/workflow. The general site checks exclude DayWear-only updates. WearWell has no dependency on SEMFE code or checks. The public address continues to use the shared stouras.com GitHub Pages hosting; DayWear uses its own Firebase project and code.
 
@@ -82,7 +82,7 @@ Facebook and Apple are deferred at the owner’s request. `enabledProviders` in 
 
 The public Firebase API key is a browser project identifier, not an admin credential. Authorized domains include www.stouras.com, stouras.com and the existing Sites URL. Only the 30 fictional guest looks and the fictional welcome-page lifestyle photographs are public static images. Personal images use the authenticated server at the Sites domain. The UI account check is not the security boundary. The server has no public route for its source or image bundle.
 
-The GitHub Pages copy is the contents of `dist/` at `daywear/` in `konstantinosStouras/konstantinosStouras.github.io`, branch `master`. Preserve that repository’s Jekyll configuration and other pages. Do not add a root `.nojekyll` file. Subsequent updates should copy the complete final `dist/` content into `daywear/`, commit and push normally. The source repository remains `konstantinosStouras/personal-wardrobe`. No repository link is displayed in the product.
+The GitHub Pages copy is the contents of `dist/` at `wearwell/` in `konstantinosStouras/konstantinosStouras.github.io`, branch `master`. Preserve that repository’s Jekyll configuration and other pages. Do not add a root `.nojekyll` file. Subsequent updates should copy the complete final `dist/` content into `wearwell/`, commit and push normally. The source repository remains `konstantinosStouras/personal-wardrobe`. No repository link is displayed in the product.
 
 Validation: automated tests cover wardrobe, weather, location and authentication policy. A disposable synthetic account verified real Firebase registration, sign-in, password enforcement and generic invalid-login responses and was removed afterwards. Google sign-in and sign-out were exercised in the browser. Facebook/Apple have not been enabled or tested.
 
@@ -97,7 +97,7 @@ The profile offers size dropdowns, explicit trouser sizing systems and custom-si
 
 ## WearWell identity and languages
 
-The public brand is WearWell, with the tagline “Your style. Every occasion.” The existing `/daywear/` address, Firebase project, account data collections and browser storage namespaces remain stable. The catalog still has 30 complete looks and 40 pieces, but marketing describes the benefit rather than repeating inventory counts.
+The public brand is WearWell, with the tagline “Your style. Every occasion.” The canonical public address is `/wearwell/`. The former `/daywear/` entry point redirects there while preserving query parameters and hash routes. The Firebase project, account data collections and browser storage namespaces remain stable. The catalog still has 30 complete looks and 40 pieces, but marketing describes the benefit rather than repeating inventory counts.
 
 A native public dropdown offers English, Greek, Spanish, French, Portuguese, Arabic, Mandarin (Simplified Chinese) and Cantonese (Traditional characters). Static dictionaries ship with the site; no visitor text or photos are sent to a translation service. Arabic uses right-to-left layout. Editable names, notes and size values are preserved. New visitors default to Automatic: country/subdivision codes from the existing location lookup select a supported local language, with English for unsupported countries or failed detection. Manual choices persist and take priority. A saved travel-weather city is not used as the visitor’s actual location. In multilingual locations, supported browser preferences can resolve country-level ambiguity; the dropdown remains the way to choose a preferred language.
 
@@ -108,3 +108,7 @@ The WearWell wordmark, W favicon, home-screen icons, web manifest and 1200×630 
 Weather is requested from Open-Meteo every 60 seconds while visible and online. Returning to a suspended tab or reconnecting checks immediately when overdue. Manual refreshes and city changes restart the timer. Requests time out after 15 seconds and bypass the browser cache. Failed requests clear readings and recommendations and retry on the next minute. Background updates preserve forms and non-weather pages.
 
 Open-Meteo combines suitable models from national weather services. Current conditions use 15-minute model data, so a request every minute does not mean new observations every minute. The weather card shows the provider’s data time.
+
+## WearWell address migration
+
+Publish the app to `wearwell/`. Keep `daywear/index.html` as the compatibility redirect; do not copy the application back over it. Existing legacy assets remain available for already-open tabs and old image links. The old entry point is marked noindex, and canonical and social metadata point to `/wearwell/`. The manifest uses relative paths, so new installations open `/wearwell/`. Both paths share the same origin and unchanged Firebase and local-storage identifiers, preserving accounts and browser-local wardrobe data. The website check validates the new directory and the legacy query/hash redirect.
