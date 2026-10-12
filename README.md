@@ -1,5 +1,7 @@
 # WearWell
 
+Family profiles: one account can manage separate child and spouse/partner profiles, private reference photos, sizes and local wardrobe choices. See [FAMILY-PROFILES.md](FAMILY-PROFILES.md) for usage, access rules and catalog limitations.
+
 A small, buildless personal wardrobe app inspired by the supplied monochrome catalog reference. Exactly **30 looks** share **40 pieces**: seven for each season, one gym uniform and one lounge uniform.
 
 ## Run locally
