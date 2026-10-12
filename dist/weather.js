@@ -1,5 +1,5 @@
-import {preferenceScore} from './preferences.js?v=20261011-de-ru-v1';
-import {looks} from './data.js?v=20261011-de-ru-v1';
+import {preferenceScore} from './preferences.js?v=20261012-likeness-v1';
+import {looks} from './data.js?v=20261012-likeness-v1';
 export function seasonPool(temp,month,latitude=51){
  if(!Number.isFinite(temp))throw new Error('A valid apparent temperature is required');
  const m=latitude<0?(month+5)%12+1:month;
@@ -32,4 +32,3 @@ export async function fetchWeather(location,signal){
  if(!c||![c.apparent_temperature,c.precipitation,c.wind_speed_10m,c.weather_code,d.daily?.temperature_2m_max?.[0],d.daily?.temperature_2m_min?.[0],d.daily?.precipitation_sum?.[0]].every(Number.isFinite)||typeof c.time!=='string')throw new Error('The weather service returned incomplete data.');
  return {temp:c.apparent_temperature,airTemp:Number.isFinite(c.temperature_2m)?c.temperature_2m:null,humidity:Number.isFinite(c.relative_humidity_2m)&&c.relative_humidity_2m>=0&&c.relative_humidity_2m<=100?c.relative_humidity_2m:null,isDay:[0,1].includes(c.is_day)?c.is_day===1:null,precip:c.precipitation,wind:c.wind_speed_10m,code:c.weather_code,dailyPrecip:d.daily.precipitation_sum[0],high:d.daily.temperature_2m_max[0],low:d.daily.temperature_2m_min[0],time:c.time,timezone:d.timezone,received:Date.now()};
 }
-

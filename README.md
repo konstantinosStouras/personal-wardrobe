@@ -93,7 +93,7 @@ The profile offers size dropdowns, explicit trouser sizing systems and custom-si
 
 ## Protected image delivery
 
-`dist/private-models.js` obtains the signed-in Firebase ID token in memory, sends it over HTTPS in an Authorization header, and turns the authenticated image payload into temporary blob URLs. It clears all URLs and cancels pending loads on account changes. No personal pixels, tokens, or image URLs are written to localStorage. A failed private fetch shows retry controls, never someone else’s model. Both the catalog endpoint and individual image endpoints authenticate independently. Signing out cannot erase screenshots or copies previously saved by an authorized viewer. Older public deployment/history copies predate this private delivery change.
+Personal images now come from authenticated Firestore documents after owner approval. The preferred headshot, three posture candidates, natural retouching options, approval process, private desktop workflow and server-side API configuration are documented in [MODEL-STUDIO.md](MODEL-STUDIO.md). The previous hard-coded personal catalog is no longer requested. Private pixels stay in memory and are cleared on sign-out. Wardrobe choices remain browser-local.
 
 ## WearWell identity and languages
 

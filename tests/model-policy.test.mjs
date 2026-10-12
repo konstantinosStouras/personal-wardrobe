@@ -1,23 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {hasPersonalModel,modelImageSource,modelCaption,modelFitNotes} from '../dist/model-policy.js';
+import {modelImageSource,modelCaption,modelFitNotes} from '../dist/model-policy.js';
 import {looks} from '../dist/data.js';
-const owner='wqXod8mXlsZr0qCtKSN7A5Fwnl03';
-test('owner account gets personal imagery for every look; guests and other accounts never do',()=>{
- assert.equal(looks.length,30);
- for(const look of looks){
-  assert.equal(modelImageSource(look,owner),undefined,'owner must wait for authenticated pixels');
-  assert.equal(modelImageSource(look,owner,{get:(id,uid)=>uid===owner?'blob:'+id:undefined}),'blob:'+look.id);
-  for(const uid of [null,undefined,'','someone-else','kstouras@gmail.com']){
-   assert.equal(hasPersonalModel(uid),false);
-   assert.equal(modelImageSource(look,uid),`assets/${look.id}.webp?v=guest-v1`);
-  }
- }
- assert.match(modelCaption(owner),/Your photo-based/);
- assert.match(modelCaption(null),/slim male catalog model/);
-});
-test('model copy is appropriate to the active account and uses saved fit notes safely as text',()=>{
- assert.match(modelFitNotes(owner),/naturally slimmer arms/);
- assert.doesNotMatch(modelFitNotes(null),/120|191|broad/);
- assert.equal(modelFitNotes('other',{bodyNotes:'Prefer a relaxed fit'}),'Prefer a relaxed fit');
-});
+test('all accounts use guest photography until a particular look is explicitly approved',()=>{assert.equal(looks.length,30);for(const uid of [null,'owner','someone-else','wqXod8mXlsZr0qCtKSN7A5Fwnl03'])for(const look of looks)assert.equal(modelImageSource(look,uid),`assets/${look.id}.webp?v=guest-v1`);const catalog={get:(id,uid)=>uid==='owner'&&id===looks[0].id?'blob:approved':undefined};assert.equal(modelImageSource(looks[0],'owner',catalog),'blob:approved');assert.match(modelImageSource(looks[0],'other',catalog),/^assets/);assert.match(modelImageSource(looks[1],'owner',catalog),/^assets/);assert.match(modelCaption('owner'),/approved/);});
+test('appearance notes are retained verbatim without assumed personal measurements',()=>{assert.equal(modelFitNotes('owner',{bodyNotes:'Keep my face natural'}),'Keep my face natural');assert.doesNotMatch(modelFitNotes('owner'),/120|191|broad/);});

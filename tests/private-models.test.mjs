@@ -1,28 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createPrivateCatalog} from '../dist/private-models.js';
-const image=Buffer.from('RIFF0000WEBPfakeimage').toString('base64');
-test('authenticated request stays in memory; sign-out revokes every image',async()=>{
- const revoked=[];let n=0;
- const catalog=createPrivateCatalog({fetcher:async(url,options)=>{
-  assert.equal(options.headers.Authorization,'Bearer token');assert.equal(options.cache,'no-store');assert.equal(options.credentials,'omit');assert.ok(!url.includes('token'));
-  return Response.json({images:{a:image,b:image}});
- },createURL:()=>`blob:${++n}`,revokeURL:url=>revoked.push(url)});
- assert.equal(await catalog.load('owner',async()=>'token',['a','b']),true);
- assert.equal(catalog.get('a','owner'),'blob:1');assert.equal(catalog.get('a','other'),undefined);
- catalog.clear();assert.equal(catalog.get('a','owner'),undefined);assert.deepEqual(revoked,['blob:1','blob:2']);
-});
-test('a request finishing after sign-out cannot restore personal images',async()=>{
- let resolve;const pending=new Promise(r=>resolve=r);
- const catalog=createPrivateCatalog({fetcher:()=>pending,createURL:()=>{throw Error('must not create URL');}});
- const load=catalog.load('owner',async()=>'token',['a']);await Promise.resolve();catalog.clear();
- resolve(Response.json({images:{a:image}}));assert.equal(await load,false);assert.equal(catalog.get('a','owner'),undefined);
-});
-test('failed authentication and incomplete catalogs never expose partial images',async()=>{
- const denied=createPrivateCatalog({fetcher:async()=>new Response('',{status:403})});
- await assert.rejects(denied.load('other',async()=>'token',['a']),/does not have/);
- const revoked=[];
- const partial=createPrivateCatalog({fetcher:async()=>Response.json({images:{a:image}}),createURL:()=>'blob:a',revokeURL:url=>revoked.push(url)});
- await assert.rejects(partial.load('owner',async()=>'token',['a','missing']),/Incomplete/);
- assert.deepEqual(revoked,['blob:a']);assert.equal(partial.get('a','owner'),undefined);
-});
+test('changing preferred headshot or posture hides images approved under an earlier selection',async()=>{let creates=0;const c=createPrivateCatalog({fetcher:async url=>url.includes('/modelPreferences/')?Response.json({fields:{revision:{stringValue:'new-selection'}}}):Response.json({documents:[{name:'models/a',fields:{approvedAt:{timestampValue:'2026-10-12'},revision:{stringValue:'old-selection'},data:{stringValue:'data:image/jpeg;base64,/9j/2Q=='}}}]}),createURL:()=>{creates++;return 'blob:a';}});await c.load('owner',async()=>'token',['a']);assert.equal(creates,0);assert.equal(c.get('a','owner'),undefined);});
+const prefs=()=>Response.json({fields:{revision:{stringValue:'rev1'}}});
+const doc=(id,approved=true)=>({name:`profiles/owner/models/${id}`,fields:{revision:{stringValue:'rev1'},data:{stringValue:'data:image/jpeg;base64,/9j/2Q=='},...(approved?{approvedAt:{timestampValue:'2026-10-12T10:00:00Z'}}:{})}});
+test('private approved images use an auth header and are revoked on sign-out',async()=>{const revoked=[];let n=0;const c=createPrivateCatalog({fetcher:async(url,o)=>{if(url.includes('/modelPreferences/'))return prefs();assert.ok(url.includes('owner/models'));assert.ok(!url.includes('token'));assert.equal(o.headers.Authorization,'Bearer token');assert.equal(o.cache,'no-store');return Response.json({documents:[doc('a'),doc('b')]});},createURL:()=>`blob:${++n}`,revokeURL:u=>revoked.push(u)});await c.load('owner',async()=>'token',['a','b']);assert.equal(c.get('a','owner'),'blob:1');assert.equal(c.get('a','other'),undefined);c.clear();assert.equal(c.get('a','owner'),undefined);assert.deepEqual(revoked,['blob:1','blob:2']);});
+test('late responses cannot repopulate personal images after sign-out',async()=>{let resolve;const wait=new Promise(r=>resolve=r),c=createPrivateCatalog({fetcher:()=>wait,createURL:()=>{throw Error('must not create URL');}});const loading=c.load('owner',async()=>'token',['a']);await Promise.resolve();c.clear();resolve(Response.json({documents:[doc('a')]}));assert.equal(await loading,false);});
+test('unapproved and unknown images are ignored; absent approved looks are allowed',async()=>{const c=createPrivateCatalog({fetcher:async url=>url.includes('/modelPreferences/')?prefs():Response.json({documents:[doc('a'),doc('draft',false),doc('unknown')]}),createURL:()=>'blob:a'});await c.load('owner',async()=>'token',['a','draft','missing']);assert.equal(c.get('a','owner'),'blob:a');assert.equal(c.get('draft','owner'),undefined);assert.equal(c.get('unknown','owner'),undefined);});
+test('authentication and invalid pixels fail closed',async()=>{const denied=createPrivateCatalog({fetcher:async()=>new Response('',{status:403})});await assert.rejects(denied.load('owner',async()=>'token',['a']),/could not load/);const d=doc('a');d.fields.data.stringValue='https://public.example/personal.jpg';const invalid=createPrivateCatalog({fetcher:async url=>url.includes('/modelPreferences/')?prefs():Response.json({documents:[d]})});await assert.rejects(invalid.load('owner',async()=>'token',['a']),/Invalid/);});
