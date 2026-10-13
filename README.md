@@ -113,4 +113,6 @@ Open-Meteo combines suitable models from national weather services. Current cond
 
 ## WearWell address migration
 
+The administrator directory prefetches after administrator sign-in and keeps a per-account copy in memory for 60 seconds. Reopening it renders the existing list immediately while expired data refreshes. Concurrent requests share one fetch; pagination appends only once. Account changes, sign-out and loss of administrator access clear private directory data. User removal forces a fresh list. The backend reads directory names and subscription flags in two batches, without loading measurements or photos. Mail drafts load independently, so mail failures cannot block the directory.
+
 Publish the app to `wearwell/`. Keep `daywear/index.html` as the compatibility redirect; do not copy the application back over it. Existing legacy assets remain available for already-open tabs and old image links. The old entry point is marked noindex, and canonical and social metadata point to `/wearwell/`. The manifest uses relative paths, so new installations open `/wearwell/`. Both paths share the same origin and unchanged Firebase and local-storage identifiers, preserving accounts and browser-local wardrobe data. The website check validates the new directory and the legacy query/hash redirect.
